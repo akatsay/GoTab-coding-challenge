@@ -1,0 +1,23 @@
+class {
+  onCreate(input) {
+    console.log(input)
+  }
+}
+
+<div class="modal zindex-popover">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Order Breakdown</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="list-group">
+          <for|order| of=input.orders>
+            <li class="list-group-item">${order.name}: ${order.quantity} x $${order.price / 100}</li>
+          </for>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,37 @@
+class {
+  onCreate(input) {
+    this.state = {
+      salesTotals: {
+        totalSales: 0,
+        netSales: 0,
+        autogratuity: 0,
+        tax: 0,
+        tips: 0
+      },
+    };
+    const {salesData} = input
+    this.calculateTotals(salesData);
+  }
+
+  calculateTotals(salesData) {
+    this.state.salesTotals.totalSales = salesData.reduce((total, tab) => total + tab.total, 0) / 100;
+    this.state.salesTotals.netSales = salesData.reduce((total, tab) => total + tab.subtotal, 0) / 100;
+    this.state.salesTotals.autogratuity = salesData.reduce((total, tab) => total + tab.autogratuity, 0) / 100;
+    this.state.salesTotals.tax = salesData.reduce((total, tab) => total + tab.tax, 0) / 100;
+    this.state.salesTotals.tips = salesData.reduce((total, tab) => total + tab.tip, 0) / 100;
+  }
+}
+
+<div class="container">
+    <h2 class="text-center my-4">Total metrics:</h2>
+    <div class="mb-3">
+      <ul class="list-unstyled d-flex flex-wrap justify-content-between">
+        <total-box title="Gross Sales" value=state.salesTotals.totalSales />
+        <total-box title="Net Sales" value=state.salesTotals.netSales />
+        <total-box title="Autogratuity" value=state.salesTotals.autogratuity />
+        <total-box title="Tax" value=state.salesTotals.tax />
+        <total-box title="Tips" value=state.salesTotals.tips />
+      </ul>
+    </div>
+</div>
+

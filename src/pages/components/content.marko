@@ -1,0 +1,33 @@
+<!-- For more documentation on adding state see: https://markojs.com/docs/getting-started/#adding-state -->
+
+import seedData from "../../seed.json";
+
+class {
+  onCreate() {
+    this.state = {
+      salesData: seedData.tabs,
+    }
+  }
+}
+
+
+<div class="container bg-white content-container">
+  <header class="d-flex justify-content-center ">
+    <img class="logo img-fluid" src="../../assets/gotab-logo.svg" alt="GoTab"/>
+  </header>
+  <main class="col-12">
+    <totals-boxes salesData=state.salesData />
+    <tabs-list salesData=state.salesData />
+  </main>
+</div>
+
+<style>
+  @media (min-width: 576px) {
+    .logo {
+      max-width: 480px;
+    }
+  }
+  .content-container {
+    min-height: 100vh
+  }
+</style>

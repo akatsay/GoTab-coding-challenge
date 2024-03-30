@@ -30,18 +30,20 @@ class {
   }
 }
 
+//name=tab.name total=tab.total timestamp=tab.timestamp orders=tab.items
+
 <div class="container">
     <h2 class="text-center my-4">Tabs:</h2>
       <ul class="list-unstyled d-flex flex-wrap justify-content-between">
         <for|tab| of=state.currentItems>
-          <tab key=tab.id name=tab.name total=tab.total timestamp=tab.timestamp orders=tab.items />
+          <tab key=tab.id tabData=tab />
         </for>
       </ul>
-    <nav class="pagination justify-content-center align-items-center" >
+    <nav class="pagination justify-content-center align-items-center pb-3" >
       <button class="page-link rounded mb-2 mx-2" on-click("onShowPrevPage")>Previous</button>
       <p class="mb-2">Page ${state.currentPage} of ${Math.ceil(state.allItems.length / state.itemsPerPage)}</p>
       <button class="page-link rounded mb-2 mx-2" on-click("onShowNextPage")>Next</button>
-  </nav>
+    </nav>
 </div>
 
 <style>

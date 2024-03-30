@@ -1,24 +1,19 @@
-class {
-  onCreate() {
-    this.state = {
-      modalVisible: false,
-    };
-  }
-  onToggleModal(orders) {
-    this.state.modalVisible = !this.state.modalVisible;
-  }
-}
-
-<li on-click("onToggleModal") class="d-flex flex-column justify-content-between tab-box card-body bg-blue rounded m-2">
-  <h5 class="card-title">${input.name}</h5>
-  <div class="d-flex justify-content-between align-items-end">
-    <p class="card-text fs-1">$${input.total / 100}</p>
+<li 
+style="cursor: pointer;" 
+class="d-flex flex-column justify-content-between tab-box card-body bg-blue pointer rounded m-2"
+data-bs-toggle="modal" data-bs-target=`#tab-modal${input.tabData.id}` 
+> 
+  <h5 class="card-title">${input.tabData.name}</h5>
+  <div class="d-flex justify-content-between">
+    <p class="card-text fs-2">$${input.tabData.total / 100}</p>
     <div>
-      <p class="card-text">${new Date(input.timestamp).toLocaleString('en-US', {hour: '2-digit', minute:'2-digit'})}</p>
-      <p class="card-text text-end">${new Date(input.timestamp).toLocaleString('en-US', {month: '2-digit', day:'2-digit'})}</p>
+      <p class="card-text">${new Date(input.tabData.timestamp).toLocaleString('en-US', {hour: '2-digit', minute:'2-digit'})}
+        <i class="fa-regular fa-clock px-2"></i>
+      </p>
+      <p class="card-text text-end">${new Date(input.tabData.timestamp).toLocaleString('en-US', {month: '2-digit', day:'2-digit'})}
+        <i class="fa-regular fa-calendar-days px-2"></i>
+      </p>
     </div>
   </div>
-  <if(state.modalVisible)>
-    <tab-modal orders=input.orders />
-  </if>
+  <tab-modal targetId=input.tabData.id tabData=input.tabData orders=input.tabData.items />
 </li>

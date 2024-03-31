@@ -7,10 +7,10 @@ data-bs-toggle="modal" data-bs-target=`#tab-modal${input.tabData.id}`
   <div class="d-flex justify-content-between">
     <p class="card-text fs-2">$${input.tabData.total / 100}</p>
     <div>
-      <p class="card-text">${new Date(input.tabData.timestamp).toLocaleString('en-US', {hour: '2-digit', minute:'2-digit'})}
+      <p class="card-text">${new Date(input.tabData.timestamp).toLocaleString("en-US", {hour: "2-digit", minute:"2-digit"})}
         <i class="fa-regular fa-clock px-2"></i>
       </p>
-      <p class="card-text text-end">${new Date(input.tabData.timestamp).toLocaleString('en-US', {month: '2-digit', day:'2-digit'})}
+      <p class="card-text text-end">${new Date(input.tabData.timestamp).toLocaleString("en-US", {month: "2-digit", day:"2-digit"})}
         <i class="fa-regular fa-calendar-days px-2"></i>
       </p>
     </div>

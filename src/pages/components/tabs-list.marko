@@ -4,44 +4,129 @@ class {
       currentPage: 1,
       itemsPerPage: 12,
       allItems: input.salesData,
+      filteredItems: [],
       currentItems: [],
+      searchTerm: "",
+      sortBy: "Time",
+      sortDirection: "Descending"
     };
     this.getPaginatedItems();
   }
 
+  onChangeSortByItem(event) {
+    this.state.sortBy = event.target.value
+    this.getPaginatedItems();
+
+  }
+
+  onChangeSortDirectionItem(event) {
+    this.state.sortDirection = event.target.value
+    this.getPaginatedItems();
+  }
+
   getPaginatedItems() {
+    const filteredItems = this.state.allItems.filter(item =>
+        item.name.toLowerCase().includes(this.state.searchTerm.toLowerCase())
+    );
+    const sortedItems = this.sortItems(filteredItems, this.state.sortBy, this.state.sortDirection);
     const startIndex = (this.state.currentPage - 1) * this.state.itemsPerPage;
     const endIndex = startIndex + this.state.itemsPerPage;
-    this.state.currentItems = this.state.allItems.slice(startIndex, endIndex);
-  }
+
+    this.state.filteredItems = sortedItems;
+    this.state.currentItems = sortedItems.slice(startIndex, endIndex);
+
+    // Check if current page exceeds total pages when array is filtered, then navigate back to the first page
+    const totalPages = Math.ceil(filteredItems.length / this.state.itemsPerPage);
+    if (this.state.currentPage > totalPages && this.state.searchTerm) {
+        this.state.currentPage = 1;
+        this.state.currentItems = sortedItems.slice(0, this.state.itemsPerPage);
+    }
+}
+
+sortItems(items, sortBy, sortDirection) {
+    return items.sort((a, b) => {
+        let valueA, valueB;
+
+        if (sortBy === "Time") {
+            valueA = new Date(a.timestamp);
+            valueB = new Date(b.timestamp);
+        } else if (sortBy === "Total") {
+            valueA = a.total;
+            valueB = b.total;
+        } 
+        if (valueA < valueB) {
+            return sortDirection === "Ascending" ? -1 : 1;
+        }
+        if (valueA > valueB) {
+            return sortDirection === "Ascending" ? 1 : -1;
+        }
+        return 0;
+    });
+}
 
   onShowNextPage() {
-    if (this.state.currentPage < Math.ceil(this.state.allItems.length / this.state.itemsPerPage)) {
-      this.state.currentPage++;
-      this.getPaginatedItems();
+    const totalPages = Math.ceil(this.state.filteredItems.length / this.state.itemsPerPage);
+    if (this.state.currentPage < totalPages) {
+        this.state.currentPage++;
+        this.getPaginatedItems();
     }
-  }
+}
 
-  onShowPrevPage() {
+onShowPrevPage() {
     if (this.state.currentPage > 1) {
-      this.state.currentPage--;
-      this.getPaginatedItems();
+        this.state.currentPage--;
+        this.getPaginatedItems();
     }
+}
+
+  onSearchInputChange(event) {
+    this.state.searchTerm = event.target.value;
+    this.getPaginatedItems();
   }
 }
 
-//name=tab.name total=tab.total timestamp=tab.timestamp orders=tab.items
-
 <div class="container">
-    <h2 class="text-center my-4">Tabs:</h2>
-      <ul class="list-unstyled d-flex flex-wrap justify-content-between">
-        <for|tab| of=state.currentItems>
-          <tab key=tab.id tabData=tab />
-        </for>
-      </ul>
-    <nav class="pagination justify-content-center align-items-center pb-3" >
+  <h2 class="text-center my-4"><i class="fa-solid fa-champagne-glasses mx-2"></i>Tabs:</h2>
+
+    <div class="mb-3">
+      <label class="form-label fs-4">Search:</label>
+      <input id="searchInput" class="form-control" type="text" placeholder="Type name to search" on-input("onSearchInputChange") value=state.searchTerm>
+    </div>
+
+    <div class="radio-container">
+        <div class="mb-3 d-flex align-items-center selection-group">
+            <label class="form-label fs-4 text-decoration-underline">Sort By:</label>
+            <div class="radio-group mx-3">
+                <input type="radio" id="sortByTime" name="sortBy" value="Time" checked=state.sortBy === "Time" on-change("onChangeSortByItem")>
+                <label for="sortByTime">Time</label>
+            </div>
+            <div class="radio-group">
+                <input type="radio" id="sortByTotal" name="sortBy" value="Total" checked=state.sortBy === "Total" on-change("onChangeSortByItem")>
+                <label for="sortByTotal">Amount</label>
+            </div>
+        </div>
+        <div class="mb-3 d-flex align-items-center selection-group">
+            <label class="form-label fs-4 text-decoration-underline">Sort Direction:</label>
+            <div class="radio-group mx-3">
+                <input type="radio" id="sortDescending" name="sortDirection" value="Descending" checked=state.sortDirection === "Descending" on-change("onChangeSortDirectionItem")>
+                <label for="sortDescending">Descending</label>
+            </div>
+            <div class="radio-group">
+                <input type="radio" id="sortAscending" name="sortDirection" value="Ascending" checked=state.sortDirection === "Ascending" on-change("onChangeSortDirectionItem")>
+                <label for="sortAscending">Ascending</label>
+            </div>
+        </div>
+    </div>
+
+    <ul class="list-unstyled d-flex flex-wrap justify-content-between">
+      <for|tab| of=state.currentItems>
+        <tab key=tab.id tabData=tab />
+      </for>
+    </ul>
+
+    <nav class="pagination justify-content-center align-items-center pb-3">
       <button class="page-link rounded mb-2 mx-2" on-click("onShowPrevPage")>Previous</button>
-      <p class="mb-2">Page ${state.currentPage} of ${Math.ceil(state.allItems.length / state.itemsPerPage)}</p>
+      <p class="mb-2">Page ${state.currentPage} of ${Math.ceil(state.filteredItems.length / state.itemsPerPage)}</p>
       <button class="page-link rounded mb-2 mx-2" on-click("onShowNextPage")>Next</button>
     </nav>
 </div>
@@ -53,5 +138,18 @@ class {
   }
   .bg-blue {
     background-color: #e5eefa;
+  }
+  .radio-container {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .selection-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .radio-group {
+    margin-right: 1rem;
   }
 </style>

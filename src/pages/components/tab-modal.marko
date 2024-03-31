@@ -1,5 +1,5 @@
-<div class="modal fade" id=`tab-modal${input.targetId}`>
-  <div class="modal-dialog">
+<div class="modal fade" id=`tab-modal${input.targetId}` data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog" style="cursor: default;">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">${input.tabData.name} ordered:</h5>
@@ -20,33 +20,56 @@
               <tr>
                 <td>${order.name}</td>
                 <td>${order.quantity}</td>
-                <td>$${order.price / 100}</td>
+                <td class="text-end">$${order.price / 100}</td>
               </tr>
             </for>
-              <tr class='fs-4'>
-                <td >Total:</td>
-                <td></td>
-                <td>$${input.tabData.subtotal / 100}</td>
-              </tr>
-              <!-- <tr class='fs-5'>
-                <td >Autogratuity:</td>
-                <td></td>
-                <td>$${input.tabData.autogratuity / 100}</td>
-              </tr>
-              <tr class='fs-5'>
-                <td >Tax:</td>
-                <td></td>
-                <td>$${input.tabData.tax / 100}</td>
-              </tr>
-              <tr class='fs-5'>
-                <td >Tip:</td>
-                <td></td>
-                <td>$${input.tabData.tip / 100}</td>
-              </tr> -->
+          </tbody>
+        </table>
+        <table class="table">
+          <tbody>
+            <tr class="text-white bg-dark fs-4">
+              <td >Subtotal:</td>
+              <td class="text-end">$${input.tabData.subtotal / 100}</td>
+            </tr>
+            <tr class="">
+              <td >Autogratuity:</td>
+              <td class="text-end">$${input.tabData.autogratuity / 100}</td>
+            </tr>
+            <tr class="">
+              <td >Tax:</td>
+              <td class="text-end">$${input.tabData.tax / 100}</td>
+            </tr>
+            <tr class="text-white bg-dark fs-4">
+              <td >Total:</td>
+              <td class="text-end">$${input.tabData.total / 100}</td>
+            </tr>
+            <tr class="bg-green text-white fs-4">
+              <td >Tip:</td>
+              <td class="text-end">$${input.tabData.tip / 100}</td>
+            </tr>
           </tbody>
         </table>
         </ul>
+        <div class="d-flex justify-content-end">
+          <p class="card-text px-2">
+          <i class="fa-regular fa-clock px-2"></i>
+            ${new Date(input.tabData.timestamp).toLocaleString("en-US", {hour: "2-digit", minute:"2-digit"})}
+          </p>
+          <p class="card-text">
+                  <i class="fa-regular fa-calendar-days px-2"></i>
+            ${new Date(input.tabData.timestamp).toLocaleString("en-US", {month: "2-digit", day:"2-digit", year:"numeric"})}
+          </p>
+        </div>
+        <div class="modal-footer d-flex justify-content-center">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
       </div>
     </div>
   </div>
 </div>
+
+<style>
+  .bg-green {
+    background-color: #198754;
+  }
+</style>
